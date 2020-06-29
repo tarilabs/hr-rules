@@ -1,0 +1,53 @@
+package com.redhat.demos.albertsons.hr_rules;
+
+import com.redhat.demos.albertsons.*;
+
+// Holidays Calendar utility
+global com.opengamma.strata.basics.date.HolidayCalendar holidaysCalendar;
+
+rule "Premium Payment for Holidays"
+   when
+      $hdr: HireDateReference()
+      $e:  Employee(  
+         hireDate >= $hdr.startDate, // hired on or after the satrt reference date
+      )
+      WorkSheet( employeeId == $e.id, $ws: worksheet )
+      //TODO: try to apply accumulate() here!
+      $holidaysBeforeInitialPeriod : List() 
+                                       from collect( WorkingHour( dateTime.isBefore( hireDate.plusMonths(6).plusHours(2080) ) ) 
+                                                      from $ws 
+                                                   )
+      //TODO: should be split in a new Rule
+      $holidaysAfterInitialPeriod  : List() 
+                                       from collect( WorkingHour( dateTime.isAfter( hireDate.plusMonths(6).plusHours(2080) ) ) 
+                                                      from $ws 
+                                                   )
+
+         //hireDate.plusMonths(6)  // first x months of employment
+         //hireDate.plusMonths(6).plusHours(2080) // first x hours after the the first 6 months 
+         //LocalDate.of(2020, 6, 30).isAfter(LocalDate.now().plusDays(2))
+
+   then
+      System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
+      PremiumPay premiumPay = new PremiumPay();
+      premiumPay.setEmployeeId($e.getId());
+      premiumPay.setPremiumType("Holiday"); //parameter
+      premiumPay.setPremiumAmount(                               //parameter
+         $e.getRegularHourPayRate().multiply( BigDecimal.valueOf(1.25)).setScale(2, RoundingMode.ROUND_HALF_EVEN) ) 
+      );
+      insert( premiumPay );
+end
+
+rule "Premium Payment for Shift Days"
+   when
+      eval( true )
+   then
+      System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
+end
+
+rule "Premium Payment for Sundays"
+   when
+      eval( true )
+   then
+      System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
+end

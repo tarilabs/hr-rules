@@ -56,4 +56,14 @@ public class PremiumPay implements java.io.Serializable {
 		this.premiumType = premiumType;
 	}
 
+	@Override
+	public String toString() {
+		return "{" +
+			" id='" + getId() + "'" +
+			", employeeId='" + getEmployeeId() + "'" +
+			", premiumAmount='" + getPremiumAmount() + "'" +
+			", premiumType='" + getPremiumType() + "'" +
+			"}";
+	}
+
 }

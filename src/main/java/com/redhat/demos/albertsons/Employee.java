@@ -10,7 +10,7 @@ public class Employee implements java.io.Serializable {
 
 	private java.lang.Long id;
 	private java.lang.String name;
-	private java.time.LocalDate hireDate;
+	private java.time.LocalDateTime hireDate;
 	private java.math.BigDecimal baseSalary;
 	private java.math.BigDecimal regularHourPayRate;
 
@@ -33,11 +33,11 @@ public class Employee implements java.io.Serializable {
 		this.name = name;
 	}
 
-	public java.time.LocalDate getHireDate() {
+	public java.time.LocalDateTime getHireDate() {
 		return this.hireDate;
 	}
 
-	public void setHireDate(java.time.LocalDate hireDate) {
+	public void setHireDate(java.time.LocalDateTime hireDate) {
 		this.hireDate = hireDate;
 	}
 
@@ -58,13 +58,24 @@ public class Employee implements java.io.Serializable {
 	}
 
 	public Employee(java.lang.Long id, java.lang.String name,
-			java.time.LocalDate hireDate, java.math.BigDecimal baseSalary,
+			java.time.LocalDateTime hireDate, java.math.BigDecimal baseSalary,
 			java.math.BigDecimal regularHourPayRate) {
 		this.id = id;
 		this.name = name;
 		this.hireDate = hireDate;
 		this.baseSalary = baseSalary;
 		this.regularHourPayRate = regularHourPayRate;
+	}
+
+	@Override
+	public String toString() {
+		return "{" +
+			" id='" + getId() + "'" +
+			", name='" + getName() + "'" +
+			", hireDate='" + getHireDate() + "'" +
+			", baseSalary='" + getBaseSalary() + "'" +
+			", regularHourPayRate='" + getRegularHourPayRate() + "'" +
+			"}";
 	}
 
 }
