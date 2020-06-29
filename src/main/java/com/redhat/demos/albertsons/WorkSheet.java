@@ -6,12 +6,44 @@ package com.redhat.demos.albertsons;
 
 public class WorkSheet implements java.io.Serializable {
 
-    static final long serialVersionUID = 1L;
+	static final long serialVersionUID = 1L;
 
-    public WorkSheet() {
-    }
+	private java.lang.Long id;
+	private java.lang.Long employeeId;
+	private java.util.List<java.time.LocalDateTime> worksheet;
 
+	public WorkSheet() {
+	}
 
+	public java.lang.Long getId() {
+		return this.id;
+	}
 
+	public void setId(java.lang.Long id) {
+		this.id = id;
+	}
+
+	public java.lang.Long getEmployeeId() {
+		return this.employeeId;
+	}
+
+	public void setEmployeeId(java.lang.Long employeeId) {
+		this.employeeId = employeeId;
+	}
+
+	public java.util.List<java.time.LocalDateTime> getWorksheet() {
+		return this.worksheet;
+	}
+
+	public void setWorksheet(java.util.List<java.time.LocalDateTime> worksheet) {
+		this.worksheet = worksheet;
+	}
+
+	public WorkSheet(java.lang.Long id, java.lang.Long employeeId,
+			java.util.List<java.time.LocalDateTime> worksheet) {
+		this.id = id;
+		this.employeeId = employeeId;
+		this.worksheet = worksheet;
+	}
 
 }
