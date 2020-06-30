@@ -1,5 +1,12 @@
 package com.redhat.demos.albertsons.hr_rules;
 
+import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+import com.opengamma.strata.basics.date.HolidayCalendar;
 import com.redhat.demos.albertsons.*;
 
 // Holidays Calendar utility
@@ -9,45 +16,52 @@ rule "Premium Payment for Holidays"
    when
       $hdr: HireDateReference()
       $e:  Employee(  
-         hireDate >= $hdr.startDate, // hired on or after the satrt reference date
+         hireDate.toLocalDate() >= $hdr.startDate // hired on or after the satrt reference date (May 14 2018)
       )
       WorkSheet( employeeId == $e.id, $ws: worksheet )
-      //TODO: try to apply accumulate() here!
-      $holidaysBeforeInitialPeriod : List() 
-                                       from collect( WorkingHour( dateTime.isBefore( hireDate.plusMonths(6).plusHours(2080) ) ) 
-                                                      from $ws 
-                                                   )
-      //TODO: should be split in a new Rule
-      $holidaysAfterInitialPeriod  : List() 
-                                       from collect( WorkingHour( dateTime.isAfter( hireDate.plusMonths(6).plusHours(2080) ) ) 
-                                                      from $ws 
-                                                   )
 
-         //hireDate.plusMonths(6)  // first x months of employment
-         //hireDate.plusMonths(6).plusHours(2080) // first x hours after the the first 6 months 
-         //LocalDate.of(2020, 6, 30).isAfter(LocalDate.now().plusDays(2))
+      $holidays : List() 
+                  from collect( WorkingHour( 
+                                    dateTime.isAfter( $e.hireDate.plusMonths(6) ), // after the first 6 months
+                                    holidaysCalendar.isHoliday( dateTime.toLocalDate() ) // is a holiday
+                                 ) from $ws
+                              )  
 
+      // accumulate the working hours before the first 2080hs 
+      accumulate( $workingHoursBefore2080: WorkingHour( dateTime.isBefore( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
+                  $hoursBefore2080: count($workingHoursBefore2080) 
+                )
+
+      // accumulate the working hours after the first 2080hs 
+      accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isAfter ( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
+                  $hoursAfter2080: count($workingHoursAfter2080) 
+                )
+      
    then
       System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
+      System.out.println("Working Hours for holidays before 2080hs: " + $hoursBefore2080);
+      System.out.println("Working Hours for holidays after  2080hs: " + $hoursAfter2080);
+
       PremiumPay premiumPay = new PremiumPay();
       premiumPay.setEmployeeId($e.getId());
-      premiumPay.setPremiumType("Holiday"); //parameter
-      premiumPay.setPremiumAmount(                               //parameter
-         $e.getRegularHourPayRate().multiply( BigDecimal.valueOf(1.25)).setScale(2, RoundingMode.ROUND_HALF_EVEN) ) 
+      premiumPay.setPremiumType("Holiday");
+      premiumPay.setPremiumAmount(
+         $e.getRegularHourPayRate().multiply( BigDecimal.valueOf(1.25) ).setScale(2, RoundingMode.HALF_EVEN) 
       );
+
       insert( premiumPay );
 end
 
-rule "Premium Payment for Shift Days"
-   when
-      eval( true )
-   then
-      System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
-end
+// rule "Premium Payment for Shift Days"
+//    when
+//       eval( true )
+//    then
+//       System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
+// end
 
-rule "Premium Payment for Sundays"
-   when
-      eval( true )
-   then
-      System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
-end
+// rule "Premium Payment for Sundays"
+//    when
+//       eval( true )
+//    then
+//       System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
+// end
