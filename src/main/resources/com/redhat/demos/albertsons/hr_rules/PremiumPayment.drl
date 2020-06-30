@@ -30,7 +30,6 @@ rule "Premium Payment for Holidays"
       // accumulate the working hours on holidays before the first 2080hs 
       $premium1: Double() from 
                            accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isBefore( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
-                                       //$hoursAfter2080: count($workingHoursAfter2080)
                                        init   ( double sum = 0.0; ),
                                        action ( sum += 1.25; ),
                                        reverse( sum -= 1.25; ),
@@ -40,7 +39,6 @@ rule "Premium Payment for Holidays"
       // accumulate the working hours on holidays after the first 2080hs 
       $premium2: Double() from 
                            accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isAfter( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
-                                       //$hoursAfter2080: count($workingHoursAfter2080)
                                        init   ( double sum = 0.0; ),
                                        action ( sum += 1.5; ),
                                        reverse( sum -= 1.5; ),
@@ -63,17 +61,3 @@ rule "Premium Payment for Holidays"
       System.out.println("\tPremium Pay: " + premiumPay);
       insert( premiumPay );
 end
-
-// rule "Premium Payment for Shift Days"
-//    when
-//       eval( true )
-//    then
-//       System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
-// end
-
-// rule "Premium Payment for Sundays"
-//    when
-//       eval( true )
-//    then
-//       System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
-// end
