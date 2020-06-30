@@ -28,26 +28,36 @@ rule "Premium Payment for Holidays"
                               )  
 
       // accumulate the working hours on holidays before the first 2080hs 
-      accumulate( $workingHoursBefore2080: WorkingHour( dateTime.isBefore( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
-                  $hoursBefore2080: count($workingHoursBefore2080) 
-                )
+      $premium1: Double() from 
+                           accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isBefore( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
+                                       //$hoursAfter2080: count($workingHoursAfter2080)
+                                       init   ( double sum = 0.0; ),
+                                       action ( sum += 1.25; ),
+                                       reverse( sum -= 1.25; ),
+                                       result ( sum )                  
+                           )
 
       // accumulate the working hours on holidays after the first 2080hs 
-      accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isAfter( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
-                  $hoursAfter2080: count($workingHoursAfter2080) 
-                )
+      $premium2: Double() from 
+                           accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isAfter( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
+                                       //$hoursAfter2080: count($workingHoursAfter2080)
+                                       init   ( double sum = 0.0; ),
+                                       action ( sum += 1.5; ),
+                                       reverse( sum -= 1.5; ),
+                                       result ( sum )                  
+                           )
       
    then
       System.out.println("\nRule " + drools.getRule().getName() + " got fired!");
       System.out.println("\tHolidays: " + $holidays);
-      System.out.println("\tWorking Hours for holidays before 2080hs: " + $hoursBefore2080);
-      System.out.println("\tWorking Hours for holidays after  2080hs: " + $hoursAfter2080);
+      System.out.println("\tPremium for holidays before 2080hs: " + $premium1);
+      System.out.println("\tPremium for holidays after  2080hs: " + $premium2);
 
       PremiumPay premiumPay = new PremiumPay();
       premiumPay.setEmployeeId($e.getId());
       premiumPay.setPremiumType("Holiday");
       premiumPay.setPremiumAmount(
-         $e.getRegularHourPayRate().multiply( BigDecimal.valueOf(1.25) ).setScale(2, RoundingMode.HALF_EVEN) 
+         $e.getRegularHourPayRate().multiply( BigDecimal.valueOf($premium1 + $premium2) ).setScale(2, RoundingMode.HALF_EVEN) 
       );
 
       System.out.println("\tPremium Pay: " + premiumPay);
