@@ -16,7 +16,7 @@ rule "Premium Payment for Holidays"
    when
       $hdr: HireDateReference()
       $e:  Employee(  
-         hireDate.toLocalDate() >= $hdr.startDate // hired on or after the satrt reference date (May 14 2018)
+         hireDate.toLocalDate() >= $hdr.startDate // hired on or after the satrt reference date (May 14th, 2018)
       )
       WorkSheet( employeeId == $e.id, $ws: worksheet )
 
@@ -27,20 +27,21 @@ rule "Premium Payment for Holidays"
                                  ) from $ws
                               )  
 
-      // accumulate the working hours before the first 2080hs 
+      // accumulate the working hours on holidays before the first 2080hs 
       accumulate( $workingHoursBefore2080: WorkingHour( dateTime.isBefore( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
                   $hoursBefore2080: count($workingHoursBefore2080) 
                 )
 
-      // accumulate the working hours after the first 2080hs 
-      accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isAfter ( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
+      // accumulate the working hours on holidays after the first 2080hs 
+      accumulate( $workingHoursAfter2080 : WorkingHour( dateTime.isAfter( $e.hireDate.plusMonths(6).plusHours(2080) ) ) from $holidays; 
                   $hoursAfter2080: count($workingHoursAfter2080) 
                 )
       
    then
-      System.out.println("\nRule " + drools.getRule().getName() + " got fired! \n");
-      System.out.println("Working Hours for holidays before 2080hs: " + $hoursBefore2080);
-      System.out.println("Working Hours for holidays after  2080hs: " + $hoursAfter2080);
+      System.out.println("\nRule " + drools.getRule().getName() + " got fired!");
+      System.out.println("\tHolidays: " + $holidays);
+      System.out.println("\tWorking Hours for holidays before 2080hs: " + $hoursBefore2080);
+      System.out.println("\tWorking Hours for holidays after  2080hs: " + $hoursAfter2080);
 
       PremiumPay premiumPay = new PremiumPay();
       premiumPay.setEmployeeId($e.getId());
@@ -49,6 +50,7 @@ rule "Premium Payment for Holidays"
          $e.getRegularHourPayRate().multiply( BigDecimal.valueOf(1.25) ).setScale(2, RoundingMode.HALF_EVEN) 
       );
 
+      System.out.println("\tPremium Pay: " + premiumPay);
       insert( premiumPay );
 end
 
