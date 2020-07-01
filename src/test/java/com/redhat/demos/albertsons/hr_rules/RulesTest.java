@@ -11,7 +11,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.opengamma.strata.basics.ReferenceData;
 import com.opengamma.strata.basics.date.HolidayCalendar;
@@ -24,6 +28,11 @@ import com.redhat.demos.albertsons.WorkingHour;
 
 import org.junit.Test;
 import org.kie.api.runtime.KieSession;
+import org.kie.dmn.api.core.DMNContext;
+import org.kie.dmn.api.core.DMNDecisionResult;
+import org.kie.dmn.api.core.DMNModel;
+import org.kie.dmn.api.core.DMNResult;
+import org.kie.dmn.api.core.DMNRuntime;
 
 public class RulesTest extends RulesBaseTest {
 
@@ -76,6 +85,67 @@ public class RulesTest extends RulesBaseTest {
         System.out.println("1st Fire");
         System.out.println("Fired Rules: " + fired);
         System.out.println("Results: " + kSession.getObjects());
+    }
+
+    @Test
+    public void DMNTest() {
+        DMNRuntime dmnRuntime = this.createDMNRuntime();
+        DMNContext dmnContext = dmnRuntime.newContext();
+        assertNotNull(dmnContext);
+        DMNModel dmnModel = this.createDMNModel(
+            "https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1", 
+            "Computed Hourly Pay Rate");
+
+        // hiring date reference date start = 05/14/2008
+        HireDateReference hdr = new HireDateReference(LocalDate.of(2008, 5, 14), LocalDate.MAX, LocalDate.now());
+
+        Employee employee1 = new Employee();
+        employee1.setId(1L);
+        employee1.setName("Rafael");
+        employee1.setHireDate(LocalDateTime.of(2008, 5, 15, 8, 0)); // hiredate >= 05/14/2008 + 6months = 11/14/2008
+        employee1.setBaseSalary(BigDecimal.valueOf(10000));
+        employee1.setRegularHourPayRate(BigDecimal.valueOf(25.00));
+
+        // WorkSheet ws1 = new WorkSheet();
+        // ws1.setId(10L);
+        // ws1.setEmployeeId(employee1.getId());
+
+        List<LocalDateTime> worksheet1 = new ArrayList<>();
+        // before the first 6months of hiring date (11/15/2008) + 2080 hours (02/13/2009)
+        // add 3 hours on holidays and 1 hour in weekdays
+        worksheet1.add(LocalDateTime.of(2009, 2, 7, 8,  0));  //Saturday
+        worksheet1.add(LocalDateTime.of(2009, 2, 8, 9,  0));  //Sunday
+        worksheet1.add(LocalDateTime.of(2009, 2, 8, 10,  0)); //Sunday
+        worksheet1.add(LocalDateTime.of(2009, 2, 9, 11,  0)); //Monday
+        // after the first 6months of hiring date (11/15/2008) + 2080 hours (02/13/2009)
+        // add 5 hours on holidays and 2 hours in weekdays
+        worksheet1.add(LocalDateTime.of(2020, 6, 28, 8,  0)); //Sunday
+        worksheet1.add(LocalDateTime.of(2020, 6, 28, 9,  0)); //Sunday
+        worksheet1.add(LocalDateTime.of(2020, 7, 3, 8,  0));  //Friday   (independence day)
+        worksheet1.add(LocalDateTime.of(2020, 7, 4, 9,  0));  //Saturday (independence day)
+        worksheet1.add(LocalDateTime.of(2020, 7, 5, 10, 0));  //Sunday   (independence day)
+        worksheet1.add(LocalDateTime.of(2020, 7, 6, 10, 0));  //Monday
+        worksheet1.add(LocalDateTime.of(2020, 7, 6, 11, 0));  //Monday
+       
+        HolidayCalendarId holCalId = HolidayCalendarIds.NYSE;
+        HolidayCalendar holCal = holCalId.resolve(ReferenceData.standard());
+        List<LocalDate> holidays2020 = 
+            holCal.holidays(LocalDate.of(2020, 1, 1), LocalDate.of(2021, 1, 1)).collect(Collectors.toList());
+
+        dmnContext.set("hours worked after 6 months", 2080);
+        dmnContext.set("employee", employee1);
+        dmnContext.set("worked day", LocalDateTime.of(2020, 7, 3, 8,  0));
+        dmnContext.set("Holidays", holidays2020);
+        // dmnContext.set("worksheet", ws1);
+
+        System.out.println("1st Evaluation");
+        DMNResult dmnResult = dmnRuntime.evaluateAll(dmnModel, dmnContext); 
+        for (DMNDecisionResult dr : dmnResult.getDecisionResults()) {
+            System.out.println(
+                        "Decision: '" + dr.getDecisionName() + "', " +
+                        "Result: " + dr.getResult()
+                     );
+        }
     }
 
     @Test

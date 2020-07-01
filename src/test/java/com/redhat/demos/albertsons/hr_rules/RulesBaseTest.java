@@ -9,7 +9,10 @@ import org.kie.api.builder.Message;
 import org.kie.api.builder.Results;
 import org.kie.api.runtime.ClassObjectFilter;
 import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieRuntimeFactory;
 import org.kie.api.runtime.KieSession;
+import org.kie.dmn.api.core.DMNModel;
+import org.kie.dmn.api.core.DMNRuntime;
 
 public class RulesBaseTest {
     protected KieSession createDefaultSession() {
@@ -60,4 +63,13 @@ public class RulesBaseTest {
         
         return kContainer;
     }
+
+    protected DMNRuntime createDMNRuntime(){
+        return KieRuntimeFactory.of(this.createContainer().getKieBase()).get(DMNRuntime.class);   
+    }
+
+    protected DMNModel createDMNModel(String namespace, String modelName){
+        return this.createDMNRuntime().getModel(namespace, modelName); 
+    }
+
 }

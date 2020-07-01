@@ -1,0 +1,317 @@
+<dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" id="_A86B0064-A00A-43C6-89B8-7D80E38760F9" name="Computed Hourly Pay Rate" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1">
+  <dmn:extensionElements/>
+  <dmn:itemDefinition id="_792FAE61-738F-4D64-B9A8-E5AE0EB6B8BB" name="List of Days" isCollection="true">
+    <dmn:typeRef>date</dmn:typeRef>
+  </dmn:itemDefinition>
+  <dmn:itemDefinition id="_75475C4B-A9B7-48E5-B18F-FCE5D5CAF98A" name="tEmployee" isCollection="false">
+    <dmn:itemComponent id="_6FB779BF-F574-4772-87EE-954D39C514B4" name="id" isCollection="false">
+      <dmn:typeRef>string</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_122F66CE-6442-4FC7-9964-AFCF0F47197F" name="name" isCollection="false">
+      <dmn:typeRef>string</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_510B20C1-48DB-4003-B2A7-B8FBABD46156" name="hire date" isCollection="false">
+      <dmn:typeRef>date</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_E55389F2-409E-44C9-A894-C43C12475E24" name="base salary" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_D64A7412-5770-4529-8E91-8AB4CB5A1329" name="hourly rate" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
+    </dmn:itemComponent>
+  </dmn:itemDefinition>
+  <dmn:inputData id="_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4" name="worked day">
+    <dmn:extensionElements/>
+    <dmn:variable id="_33478180-B021-4DCD-A538-EAF5BB5DE233" name="worked day" typeRef="date"/>
+  </dmn:inputData>
+  <dmn:inputData id="_198AA3F9-28FC-4577-8B54-BB235FB26A32" name="hours worked after 6 months">
+    <dmn:extensionElements/>
+    <dmn:variable id="_E1894237-3ED4-45FC-87AF-8348F8CA6DFF" name="hours worked after 6 months" typeRef="number"/>
+  </dmn:inputData>
+  <dmn:inputData id="_C7C53291-E409-448E-8566-BEF336F516B2" name="Holidays">
+    <dmn:extensionElements/>
+    <dmn:variable id="_685878C3-6C9D-4109-93D5-9AD19EE48A25" name="Holidays" typeRef="List of Days"/>
+  </dmn:inputData>
+  <dmn:decision id="_AC701F76-A39B-4ACF-901A-9CF8167E9265" name="computed hourly pay rate">
+    <dmn:extensionElements/>
+    <dmn:variable id="_29BCEE79-6909-4681-8EF0-24DB76D8E33A" name="computed hourly pay rate" typeRef="number"/>
+    <dmn:informationRequirement id="_9831C6E0-EA8E-414A-ACCA-4F12D282DAF8">
+      <dmn:requiredDecision href="#_71C53EC6-EA5E-42C8-8C5D-C2A104DE6BCC"/>
+    </dmn:informationRequirement>
+    <dmn:informationRequirement id="_03B9B0E8-A690-46DB-AA0A-55F2370DF291">
+      <dmn:requiredInput href="#_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4"/>
+    </dmn:informationRequirement>
+    <dmn:informationRequirement id="_03139610-65D7-45ED-A412-018333AAC21A">
+      <dmn:requiredInput href="#_344306F6-C2E5-44AE-B2C0-BBF972680813"/>
+    </dmn:informationRequirement>
+    <dmn:informationRequirement id="_2559904C-D904-4279-B27B-DE4089DB9C03">
+      <dmn:requiredInput href="#_198AA3F9-28FC-4577-8B54-BB235FB26A32"/>
+    </dmn:informationRequirement>
+    <dmn:context id="_68697102-5695-4AB4-A596-EA1D1CA52EFC">
+      <dmn:contextEntry>
+        <dmn:variable id="_5D51770E-C2C5-40CC-84BC-E8275FDB804C" name="is in the first 6 months" typeRef="boolean"/>
+        <dmn:literalExpression id="_3D8C2A35-34A9-47CE-976F-219379BCD82E">
+          <dmn:text>worked day - employee.hire date &lt;= duration("P180d")</dmn:text>
+        </dmn:literalExpression>
+      </dmn:contextEntry>
+      <dmn:contextEntry>
+        <dmn:variable id="_255AD7E4-4405-402E-AE44-9EC192254C7B" name="hired on or after May 14th of 2008" typeRef="boolean"/>
+        <dmn:literalExpression id="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
+          <dmn:text>employee.hire date &gt;= date("2008-05-14")</dmn:text>
+        </dmn:literalExpression>
+      </dmn:contextEntry>
+      <dmn:contextEntry>
+        <dmn:decisionTable id="_30E212DB-ABFE-4D8C-B4F4-2FC17B40A0DD" hitPolicy="UNIQUE" preferredOrientation="Rule-as-Row">
+          <dmn:input id="_3104A476-124C-47EF-BBA7-9F9D1916DB0E">
+            <dmn:inputExpression id="_AC07F568-C68C-45A1-AB35-806D0266B1DD" typeRef="boolean">
+              <dmn:text>hired on or after May 14th of 2008</dmn:text>
+            </dmn:inputExpression>
+          </dmn:input>
+          <dmn:input id="_1C74A4C5-5F10-4804-A419-218B10754569">
+            <dmn:inputExpression id="_BEDAF14B-8E15-4A71-8969-9C494DA1CA40" typeRef="boolean">
+              <dmn:text>is in the first 6 months</dmn:text>
+            </dmn:inputExpression>
+          </dmn:input>
+          <dmn:input id="_53456E33-3566-43D2-B15B-C5E539C95512">
+            <dmn:inputExpression id="_8282F2EC-335D-4FBC-8BDC-3C3D461B7C5A" typeRef="boolean">
+              <dmn:text>worked day was holiday</dmn:text>
+            </dmn:inputExpression>
+          </dmn:input>
+          <dmn:input id="_E0351E22-185B-4F59-8523-3932691E2359">
+            <dmn:inputExpression id="_D0777D52-96FD-4D69-8804-466D5CB14C40" typeRef="number">
+              <dmn:text>worked hours after 6 months</dmn:text>
+            </dmn:inputExpression>
+          </dmn:input>
+          <dmn:output id="_E6552103-5301-44FB-8CE7-10C406058509"/>
+          <dmn:annotation name="annotation-1"/>
+          <dmn:rule id="_1CEE7530-36B5-4573-943B-A752A2A5FDF9">
+            <dmn:inputEntry id="_44991039-0CF8-4142-8EC2-6933C4FAFA96">
+              <dmn:text>false</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_28FD48AF-7800-402D-9F02-BF249C37AD90">
+              <dmn:text>-</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_F7428C82-E46D-4573-B845-7723219C0479">
+              <dmn:text>-</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_E0268414-A799-4E55-821B-C6ED4A7A083C">
+              <dmn:text>-</dmn:text>
+            </dmn:inputEntry>
+            <dmn:outputEntry id="_472C0883-794F-4196-B1C2-401609B6DD2B">
+              <dmn:text>employee.hourly rate</dmn:text>
+            </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text/>
+            </dmn:annotationEntry>
+          </dmn:rule>
+          <dmn:rule id="_8D800C70-944B-41E4-9D94-4EFF5D8598FA">
+            <dmn:inputEntry id="_58582DEF-3379-47E4-868D-F62B7BE10D2D">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_EBBC9980-A518-4CA9-8548-137313DF5ACA">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_B797AFB1-B917-4952-AD88-1F36E9DEC2EC">
+              <dmn:text>-</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_B5259B8B-2F39-48C1-B775-213BDD78293B">
+              <dmn:text>-</dmn:text>
+            </dmn:inputEntry>
+            <dmn:outputEntry id="_99643677-BE00-4418-8FFF-AA5B9057766F">
+              <dmn:text>employee.hourly rate</dmn:text>
+            </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text>no holiday or premium in the first 6 months</dmn:text>
+            </dmn:annotationEntry>
+          </dmn:rule>
+          <dmn:rule id="_8419E3D4-C69B-40E8-AEEF-7972543F5EAC">
+            <dmn:inputEntry id="_C0A9789F-6B39-4B44-B6F4-F44FDE9101C2">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_4816BC2A-8B5A-4525-B3C9-533ADE274620">
+              <dmn:text>false</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_24B8D955-6629-4AC5-BDAF-EFDD821F5B0D">
+              <dmn:text>false</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_8AFE83F5-22D4-4215-B6D1-FFCDE0C9E665">
+              <dmn:text>-</dmn:text>
+            </dmn:inputEntry>
+            <dmn:outputEntry id="_98F4158B-939B-4636-A5DD-EE0E53246815">
+              <dmn:text>employee.hourly rate</dmn:text>
+            </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text>no additional on regular days</dmn:text>
+            </dmn:annotationEntry>
+          </dmn:rule>
+          <dmn:rule id="_BA38DFB9-0085-460C-A4B4-A35AE131E217">
+            <dmn:inputEntry id="_EB75E245-78DE-458D-B11E-1C1B39C7AB8E">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_88B40383-1AB5-4DC2-92DE-B91659395604">
+              <dmn:text>false</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_C5676B22-5077-4811-9E22-355BC100186C">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_9A225989-A0AB-467B-ABB7-851AD4C1A18B">
+              <dmn:text>&lt;= 2080</dmn:text>
+            </dmn:inputEntry>
+            <dmn:outputEntry id="_C8B41D39-CAA0-4039-B4C6-5AB3E024A90F">
+              <dmn:text>employee.hourly rate + 1.25</dmn:text>
+            </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text>additional 1.25 on the first 2080 hours</dmn:text>
+            </dmn:annotationEntry>
+          </dmn:rule>
+          <dmn:rule id="_5F57E3B4-356F-4DD6-A55A-FA07BE8234C3">
+            <dmn:inputEntry id="_D91A87F2-5519-467D-BB73-D9F39F7FE032">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_6BFF56F8-2FF7-492F-802A-2509129956F2">
+              <dmn:text>false</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_06A9AA15-C6CF-4341-9C21-197720A0FDBA">
+              <dmn:text>true</dmn:text>
+            </dmn:inputEntry>
+            <dmn:inputEntry id="_A5A3318E-6BED-49DC-B899-71F9031E18AE">
+              <dmn:text>&gt; 2080</dmn:text>
+            </dmn:inputEntry>
+            <dmn:outputEntry id="_F84D924C-661C-4E1C-90C6-E9D9B512D653">
+              <dmn:text>employee.hourly rate * 1.5</dmn:text>
+            </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text>1.5 hourly rate after 2080 hours</dmn:text>
+            </dmn:annotationEntry>
+          </dmn:rule>
+        </dmn:decisionTable>
+      </dmn:contextEntry>
+    </dmn:context>
+  </dmn:decision>
+  <dmn:inputData id="_344306F6-C2E5-44AE-B2C0-BBF972680813" name="employee">
+    <dmn:extensionElements/>
+    <dmn:variable id="_A4F70548-7146-4CCA-B940-68291332589A" name="employee" typeRef="tEmployee"/>
+  </dmn:inputData>
+  <dmn:decision id="_71C53EC6-EA5E-42C8-8C5D-C2A104DE6BCC" name="worked day was holiday">
+    <dmn:extensionElements/>
+    <dmn:variable id="_D572E97E-860A-42B9-B195-EBC95A0B6F53" name="worked day was holiday" typeRef="boolean"/>
+    <dmn:informationRequirement id="_3157D43A-D670-4EA6-9178-88819C81A2EB">
+      <dmn:requiredInput href="#_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4"/>
+    </dmn:informationRequirement>
+    <dmn:informationRequirement id="_543E01F6-C893-4D48-AF72-4B90D1888FE3">
+      <dmn:requiredInput href="#_C7C53291-E409-448E-8566-BEF336F516B2"/>
+    </dmn:informationRequirement>
+    <dmn:literalExpression id="_7BFC5ECE-7102-4B99-9DCB-A0B469ED6B4C">
+      <dmn:text>list contains(Holidays, worked day)</dmn:text>
+    </dmn:literalExpression>
+  </dmn:decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <di:extension>
+        <kie:ComponentsWidthsExtension>
+          <kie:ComponentWidths dmnElementRef="_68697102-5695-4AB4-A596-EA1D1CA52EFC">
+            <kie:width>50</kie:width>
+            <kie:width>236</kie:width>
+            <kie:width>1510</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_3D8C2A35-34A9-47CE-976F-219379BCD82E">
+            <kie:width>1510</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
+            <kie:width>1510</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_30E212DB-ABFE-4D8C-B4F4-2FC17B40A0DD">
+            <kie:width>50</kie:width>
+            <kie:width>235</kie:width>
+            <kie:width>168</kie:width>
+            <kie:width>178</kie:width>
+            <kie:width>203</kie:width>
+            <kie:width>234</kie:width>
+            <kie:width>422</kie:width>
+          </kie:ComponentWidths>
+          <kie:ComponentWidths dmnElementRef="_7BFC5ECE-7102-4B99-9DCB-A0B469ED6B4C">
+            <kie:width>300</kie:width>
+          </kie:ComponentWidths>
+        </kie:ComponentsWidthsExtension>
+      </di:extension>
+      <dmndi:DMNShape id="dmnshape-_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4" dmnElementRef="_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="472" y="376" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_198AA3F9-28FC-4577-8B54-BB235FB26A32" dmnElementRef="_198AA3F9-28FC-4577-8B54-BB235FB26A32" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="57" y="373" width="190" height="53"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_C7C53291-E409-448E-8566-BEF336F516B2" dmnElementRef="_C7C53291-E409-448E-8566-BEF336F516B2" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="723" y="374" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_AC701F76-A39B-4ACF-901A-9CF8167E9265" dmnElementRef="_AC701F76-A39B-4ACF-901A-9CF8167E9265" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="308" y="65" width="140" height="52"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_344306F6-C2E5-44AE-B2C0-BBF972680813" dmnElementRef="_344306F6-C2E5-44AE-B2C0-BBF972680813" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="278" y="376" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_71C53EC6-EA5E-42C8-8C5D-C2A104DE6BCC" dmnElementRef="_71C53EC6-EA5E-42C8-8C5D-C2A104DE6BCC" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="606" y="205" width="100" height="50"/>
+        <dmndi:DMNLabel/>
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="dmnedge-_9831C6E0-EA8E-414A-ACCA-4F12D282DAF8" dmnElementRef="_9831C6E0-EA8E-414A-ACCA-4F12D282DAF8">
+        <di:waypoint x="656" y="230"/>
+        <di:waypoint x="378" y="117"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="dmnedge-_03B9B0E8-A690-46DB-AA0A-55F2370DF291" dmnElementRef="_03B9B0E8-A690-46DB-AA0A-55F2370DF291">
+        <di:waypoint x="522" y="401"/>
+        <di:waypoint x="378" y="117"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="dmnedge-_03139610-65D7-45ED-A412-018333AAC21A" dmnElementRef="_03139610-65D7-45ED-A412-018333AAC21A">
+        <di:waypoint x="328" y="401"/>
+        <di:waypoint x="378" y="117"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="dmnedge-_2559904C-D904-4279-B27B-DE4089DB9C03" dmnElementRef="_2559904C-D904-4279-B27B-DE4089DB9C03">
+        <di:waypoint x="152" y="399.5"/>
+        <di:waypoint x="378" y="117"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="dmnedge-_3157D43A-D670-4EA6-9178-88819C81A2EB" dmnElementRef="_3157D43A-D670-4EA6-9178-88819C81A2EB">
+        <di:waypoint x="522" y="401"/>
+        <di:waypoint x="656" y="255"/>
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="dmnedge-_543E01F6-C893-4D48-AF72-4B90D1888FE3" dmnElementRef="_543E01F6-C893-4D48-AF72-4B90D1888FE3">
+        <di:waypoint x="773" y="399"/>
+        <di:waypoint x="656" y="255"/>
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</dmn:definitions>
