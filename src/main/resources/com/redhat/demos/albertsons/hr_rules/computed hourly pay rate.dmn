@@ -1,5 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="_A86B0064-A00A-43C6-89B8-7D80E38760F9" name="Computed Hourly Pay Rate" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1">
+<dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" id="_A86B0064-A00A-43C6-89B8-7D80E38760F9" name="Computed Hourly Pay Rate" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1">
   <dmn:extensionElements/>
   <dmn:itemDefinition id="_792FAE61-738F-4D64-B9A8-E5AE0EB6B8BB" name="List of Days" isCollection="true">
     <dmn:typeRef>date</dmn:typeRef>
@@ -46,7 +45,7 @@
       <dmn:contextEntry>
         <dmn:variable id="_255AD7E4-4405-402E-AE44-9EC192254C7B" name="hired on or after May 14th of 2008" typeRef="boolean"/>
         <dmn:literalExpression id="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
-          <dmn:text>employee.hire date >= date("2008-05-14")</dmn:text>
+          <dmn:text>employee.hire date &gt;= date("2008-05-14")</dmn:text>
         </dmn:literalExpression>
       </dmn:contextEntry>
       <dmn:contextEntry>
@@ -72,6 +71,7 @@
             </dmn:inputExpression>
           </dmn:input>
           <dmn:output id="_E6552103-5301-44FB-8CE7-10C406058509"/>
+          <dmn:annotation name=""/>
           <dmn:rule id="_1CEE7530-36B5-4573-943B-A752A2A5FDF9">
             <dmn:inputEntry id="_44991039-0CF8-4142-8EC2-6933C4FAFA96">
               <dmn:text>false</dmn:text>
@@ -88,6 +88,9 @@
             <dmn:outputEntry id="_472C0883-794F-4196-B1C2-401609B6DD2B">
               <dmn:text>employee.hourly rate</dmn:text>
             </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text/>
+            </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_8D800C70-944B-41E4-9D94-4EFF5D8598FA">
             <dmn:inputEntry id="_58582DEF-3379-47E4-868D-F62B7BE10D2D">
@@ -105,6 +108,9 @@
             <dmn:outputEntry id="_99643677-BE00-4418-8FFF-AA5B9057766F">
               <dmn:text>employee.hourly rate</dmn:text>
             </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text/>
+            </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_8419E3D4-C69B-40E8-AEEF-7972543F5EAC">
             <dmn:inputEntry id="_C0A9789F-6B39-4B44-B6F4-F44FDE9101C2">
@@ -122,6 +128,9 @@
             <dmn:outputEntry id="_98F4158B-939B-4636-A5DD-EE0E53246815">
               <dmn:text>employee.hourly rate</dmn:text>
             </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text/>
+            </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_BA38DFB9-0085-460C-A4B4-A35AE131E217">
             <dmn:inputEntry id="_EB75E245-78DE-458D-B11E-1C1B39C7AB8E">
@@ -139,6 +148,9 @@
             <dmn:outputEntry id="_C8B41D39-CAA0-4039-B4C6-5AB3E024A90F">
               <dmn:text>employee.hourly rate + 1.25</dmn:text>
             </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text/>
+            </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_5F57E3B4-356F-4DD6-A55A-FA07BE8234C3">
             <dmn:inputEntry id="_D91A87F2-5519-467D-BB73-D9F39F7FE032">
@@ -156,6 +168,9 @@
             <dmn:outputEntry id="_F84D924C-661C-4E1C-90C6-E9D9B512D653">
               <dmn:text>employee.hourly rate * 1.5</dmn:text>
             </dmn:outputEntry>
+            <dmn:annotationEntry>
+              <dmn:text/>
+            </dmn:annotationEntry>
           </dmn:rule>
         </dmn:decisionTable>
       </dmn:contextEntry>
@@ -195,27 +210,27 @@
       <di:extension>
         <kie:ComponentsWidthsExtension>
           <kie:ComponentWidths dmnElementRef="_68697102-5695-4AB4-A596-EA1D1CA52EFC">
-            <kie:width>50.0</kie:width>
-            <kie:width>236.0</kie:width>
-            <kie:width>1510.0</kie:width>
+            <kie:width>50</kie:width>
+            <kie:width>236</kie:width>
+            <kie:width>1510</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_3D8C2A35-34A9-47CE-976F-219379BCD82E">
-            <kie:width>1510.0</kie:width>
+            <kie:width>1510</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
-            <kie:width>1510.0</kie:width>
+            <kie:width>1510</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_30E212DB-ABFE-4D8C-B4F4-2FC17B40A0DD">
-            <kie:width>50.0</kie:width>
-            <kie:width>235.0</kie:width>
-            <kie:width>168.0</kie:width>
-            <kie:width>178.0</kie:width>
-            <kie:width>203.0</kie:width>
-            <kie:width>234.0</kie:width>
-            <kie:width>422.0</kie:width>
+            <kie:width>50</kie:width>
+            <kie:width>235</kie:width>
+            <kie:width>168</kie:width>
+            <kie:width>178</kie:width>
+            <kie:width>203</kie:width>
+            <kie:width>234</kie:width>
+            <kie:width>422</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_7BFC5ECE-7102-4B99-9DCB-A0B469ED6B4C">
-            <kie:width>300.0</kie:width>
+            <kie:width>300</kie:width>
           </kie:ComponentWidths>
         </kie:ComponentsWidthsExtension>
       </di:extension>

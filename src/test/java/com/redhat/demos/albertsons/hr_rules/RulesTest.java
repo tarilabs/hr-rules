@@ -36,7 +36,7 @@ import org.kie.dmn.api.core.DMNRuntime;
 
 public class RulesTest extends RulesBaseTest {
 
-    @Test
+    // @Test
     public void RulesTest() {
         KieSession kSession = createSession("stateful-session");
         assertNotNull(kSession);
@@ -132,7 +132,7 @@ public class RulesTest extends RulesBaseTest {
         List<LocalDate> holidays2020 = 
             holCal.holidays(LocalDate.of(2020, 1, 1), LocalDate.of(2021, 1, 1)).collect(Collectors.toList());
 
-        dmnContext.set("hours worked after 6 months", 2080);
+        dmnContext.set("worked hours after 6 months", 2080);
         dmnContext.set("employee", employee1);
         dmnContext.set("worked day", LocalDateTime.of(2020, 7, 3, 8,  0));
         dmnContext.set("Holidays", holidays2020);
@@ -140,6 +140,10 @@ public class RulesTest extends RulesBaseTest {
 
         System.out.println("1st Evaluation");
         DMNResult dmnResult = dmnRuntime.evaluateAll(dmnModel, dmnContext); 
+        dmnResult.getContext().getAll().forEach(
+                (key, value) -> { System.out.println( "Key: " + key + "\t" + " Value: " + value ); }
+            );
+        dmnResult.getMessages().forEach(System.out::println);
         for (DMNDecisionResult dr : dmnResult.getDecisionResults()) {
             System.out.println(
                         "Decision: '" + dr.getDecisionName() + "', " +
@@ -156,7 +160,7 @@ public class RulesTest extends RulesBaseTest {
         System.out.println("Calendar name: " + holCal.getName());
 
         System.out.println("05/15/2008 + 6 months: " + LocalDate.of(2008, 5, 15).plusMonths(6));
-        System.out.println("hire date + 6 months + 2080hs: " + LocalDateTime.of(2008, 5, 18, 8, 0).plusMonths(6).plusHours(2080));
+        System.out.println("hire date + 6 months + 2080hs: " + LocalDateTime.of(2008, 5, 15, 8, 0).plusMonths(6).plusHours(2080));
 
         LocalDate mondayUSMemorialDay = LocalDate.of(2020, 5, 25);
         System.out.println("Day of the week: " + mondayUSMemorialDay.getDayOfWeek());
