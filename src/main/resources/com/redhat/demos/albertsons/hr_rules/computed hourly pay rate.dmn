@@ -70,8 +70,7 @@
               <dmn:text>worked hours after 6 months</dmn:text>
             </dmn:inputExpression>
           </dmn:input>
-          <dmn:output id="_E6552103-5301-44FB-8CE7-10C406058509"/>
-          <dmn:annotation name=""/>
+          <dmn:output id="_E6552103-5301-44FB-8CE7-10C406058509" typeRef="number"/>
           <dmn:rule id="_1CEE7530-36B5-4573-943B-A752A2A5FDF9">
             <dmn:inputEntry id="_44991039-0CF8-4142-8EC2-6933C4FAFA96">
               <dmn:text>false</dmn:text>

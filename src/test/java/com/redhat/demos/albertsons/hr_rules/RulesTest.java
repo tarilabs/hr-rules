@@ -13,7 +13,9 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -105,6 +107,13 @@ public class RulesTest extends RulesBaseTest {
         employee1.setHireDate(LocalDateTime.of(2008, 5, 15, 8, 0)); // hiredate >= 05/14/2008 + 6months = 11/14/2008
         employee1.setBaseSalary(BigDecimal.valueOf(10000));
         employee1.setRegularHourPayRate(BigDecimal.valueOf(25.00));
+        
+        Map<String, Object> employeeMap = new HashMap<>();
+        employeeMap.put("id", employee1.getId());
+        employeeMap.put("name", employee1.getName());
+        employeeMap.put("hire date", employee1.getHireDate());
+        employeeMap.put("base salary", employee1.getBaseSalary());
+        employeeMap.put("hourly rate", employee1.getRegularHourPayRate());
 
         // WorkSheet ws1 = new WorkSheet();
         // ws1.setId(10L);
@@ -132,18 +141,25 @@ public class RulesTest extends RulesBaseTest {
         List<LocalDate> holidays2020 = 
             holCal.holidays(LocalDate.of(2020, 1, 1), LocalDate.of(2021, 1, 1)).collect(Collectors.toList());
 
-        dmnContext.set("worked hours after 6 months", 2080);
+        dmnContext.set("worked hours after 6 months", 1);
         dmnContext.set("employee", employee1);
-        dmnContext.set("worked day", LocalDateTime.of(2020, 7, 3, 8,  0));
+        dmnContext.set("worked day", LocalDate.of(2020, 7, 3));
         dmnContext.set("Holidays", holidays2020);
         // dmnContext.set("worksheet", ws1);
 
-        System.out.println("1st Evaluation");
+        System.out.println("Requesting DMN Evaluation...");
         DMNResult dmnResult = dmnRuntime.evaluateAll(dmnModel, dmnContext); 
+
+        System.out.println("\n  DMN Context Data inputs: ");
         dmnResult.getContext().getAll().forEach(
-                (key, value) -> { System.out.println( "Key: " + key + "\t" + " Value: " + value ); }
+                (key, value) -> { System.out.println( "\tKey: " + key + "," + " Value: " + value ); }
             );
-        dmnResult.getMessages().forEach(System.out::println);
+
+        System.out.println("\n  DMN Context Result Msg: ");
+        dmnResult.getMessages().forEach((msg) -> System.out.println("\t" + msg));
+        System.out.println("");
+
+        System.out.println("\n  DMN Context Outputs: ");
         for (DMNDecisionResult dr : dmnResult.getDecisionResults()) {
             System.out.println(
                         "Decision: '" + dr.getDecisionName() + "', " +
