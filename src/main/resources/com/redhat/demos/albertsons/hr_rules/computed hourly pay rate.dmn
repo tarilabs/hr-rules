@@ -182,9 +182,9 @@
     <dmn:extensionElements/>
     <dmn:variable id="_33478180-B021-4DCD-A538-EAF5BB5DE233" name="worked day" typeRef="date"/>
   </dmn:inputData>
-  <dmn:inputData id="_198AA3F9-28FC-4577-8B54-BB235FB26A32" name="hours worked after 6 months">
+  <dmn:inputData id="_198AA3F9-28FC-4577-8B54-BB235FB26A32" name="worked hours after 6 months">
     <dmn:extensionElements/>
-    <dmn:variable id="_E1894237-3ED4-45FC-87AF-8348F8CA6DFF" name="hours worked after 6 months" typeRef="number"/>
+    <dmn:variable id="_E1894237-3ED4-45FC-87AF-8348F8CA6DFF" name="worked hours after 6 months" typeRef="number"/>
   </dmn:inputData>
   <dmn:inputData id="_344306F6-C2E5-44AE-B2C0-BBF972680813" name="employee">
     <dmn:extensionElements/>
