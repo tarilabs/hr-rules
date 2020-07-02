@@ -58,20 +58,20 @@ public class RulesTest extends RulesBaseTest {
         ws1.setEmployeeId(employee1.getId());
 
         // before the first 6months of hiring date (11/15/2008) + 2080 hours (02/13/2009)
-        // add 3 hours on holidays and 1 hour in weekdays
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 7, 8,  0)));  //Saturday
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 8, 9,  0)));  //Sunday
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 8, 10,  0))); //Sunday
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 9, 11,  0))); //Monday
+        // add 3 hours on holidays (before the 2080 limit) and 1 hour in weekdays
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 8, 9,  0), 2075L));  //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 7, 8,  0), 2076L));  //Saturday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 8, 10,  0), 2078L)); //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 9, 11,  0), 2079L)); //Monday
         // after the first 6months of hiring date (11/15/2008) + 2080 hours (02/13/2009)
-        // add 5 hours on holidays and 2 hours in weekdays
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 6, 28, 8,  0))); //Sunday
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 6, 28, 9,  0))); //Sunday
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 3, 8,  0)));  //Friday   (independence day)
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 4, 9,  0)));  //Saturday (independence day)
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 5, 10, 0)));  //Sunday   (independence day)
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 6, 10, 0)));  //Monday
-        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 6, 11, 0)));  //Monday
+        // add 5 hours on holidays (after the 2080 limit) and 2 hours in weekdays
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 6, 28, 8,  0), 2080L)); //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 6, 28, 9,  0), 2081L)); //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 3, 8,  0), 2082L));  //Friday   (independence day)
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 4, 9,  0), 2083L));  //Saturday (independence day)
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 5, 10, 0), 2084L));  //Sunday   (independence day)
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 6, 10, 0), 2085L));  //Monday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 6, 11, 0), 2086L));  //Monday
 
         kSession.insert(hdr);
         kSession.insert(employee1);
@@ -107,34 +107,27 @@ public class RulesTest extends RulesBaseTest {
         employee1.setHireDate(LocalDateTime.of(2008, 5, 15, 8, 0)); // hiredate >= 05/14/2008 + 6months = 11/14/2008
         employee1.setBaseSalary(BigDecimal.valueOf(10000));
         employee1.setRegularHourPayRate(BigDecimal.valueOf(25.00));
-        
-        Map<String, Object> employeeMap = new HashMap<>();
-        employeeMap.put("id", employee1.getId());
-        employeeMap.put("name", employee1.getName());
-        employeeMap.put("hire date", employee1.getHireDate().toLocalDate());
-        employeeMap.put("base salary", employee1.getBaseSalary());
-        employeeMap.put("hourly rate", employee1.getRegularHourPayRate());
 
-        // WorkSheet ws1 = new WorkSheet();
-        // ws1.setId(10L);
-        // ws1.setEmployeeId(employee1.getId());
+        WorkSheet ws1 = new WorkSheet();
+        ws1.setId(10L);
+        ws1.setEmployeeId(employee1.getId());
 
         List<LocalDateTime> worksheet1 = new ArrayList<>();
         // before the first 6months of hiring date (11/15/2008) + 2080 hours (02/13/2009)
-        // add 3 hours on holidays and 1 hour in weekdays
-        worksheet1.add(LocalDateTime.of(2009, 2, 7, 8,  0));  //Saturday
-        worksheet1.add(LocalDateTime.of(2009, 2, 8, 9,  0));  //Sunday
-        worksheet1.add(LocalDateTime.of(2009, 2, 8, 10,  0)); //Sunday
-        worksheet1.add(LocalDateTime.of(2009, 2, 9, 11,  0)); //Monday
+        // add 3 hours on holidays (before the 2080 limit) and 1 hour in weekdays
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 8, 9,  0), 2075L));  //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 7, 8,  0), 2076L));  //Saturday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 8, 10,  0), 2078L)); //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2009, 2, 9, 11,  0), 2079L)); //Monday
         // after the first 6months of hiring date (11/15/2008) + 2080 hours (02/13/2009)
-        // add 5 hours on holidays and 2 hours in weekdays
-        worksheet1.add(LocalDateTime.of(2020, 6, 28, 8,  0)); //Sunday
-        worksheet1.add(LocalDateTime.of(2020, 6, 28, 9,  0)); //Sunday
-        worksheet1.add(LocalDateTime.of(2020, 7, 3, 8,  0));  //Friday   (independence day)
-        worksheet1.add(LocalDateTime.of(2020, 7, 4, 9,  0));  //Saturday (independence day)
-        worksheet1.add(LocalDateTime.of(2020, 7, 5, 10, 0));  //Sunday   (independence day)
-        worksheet1.add(LocalDateTime.of(2020, 7, 6, 10, 0));  //Monday
-        worksheet1.add(LocalDateTime.of(2020, 7, 6, 11, 0));  //Monday
+        // add 5 hours on holidays (after the 2080 limit) and 2 hours in weekdays
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 6, 28, 8,  0), 2080L)); //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 6, 28, 9,  0), 2081L)); //Sunday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 3, 8,  0), 2082L));  //Friday   (independence day)
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 4, 9,  0), 2083L));  //Saturday (independence day)
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 5, 10, 0), 2084L));  //Sunday   (independence day)
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 6, 10, 0), 2085L));  //Monday
+        ws1.addWorkingHour(new WorkingHour(LocalDateTime.of(2020, 7, 6, 11, 0), 2086L));  //Monday
        
         HolidayCalendarId holCalId = HolidayCalendarIds.NYSE;
         HolidayCalendar holCal = holCalId.resolve(ReferenceData.standard());
@@ -142,10 +135,10 @@ public class RulesTest extends RulesBaseTest {
             holCal.holidays(LocalDate.of(2020, 1, 1), LocalDate.of(2021, 1, 1)).collect(Collectors.toList());
 
         dmnContext.set("worked hours after 6 months", 1);
-        dmnContext.set("employee", employeeMap);
-        dmnContext.set("worked day", LocalDate.of(2020, 7, 3));
+        dmnContext.set("employee", employee1);
+        //dmnContext.set("worked day", LocalDateTime.of(2020, 7, 3, 8, 0));
+        dmnContext.set("timesheet", ws1);
         dmnContext.set("Holidays", holidays2020);
-        // dmnContext.set("worksheet", ws1);
 
         System.out.println("Requesting DMN Evaluation...");
         DMNResult dmnResult = dmnRuntime.evaluateAll(dmnModel, dmnContext); 
