@@ -95,8 +95,8 @@ public class RulesTest extends RulesBaseTest {
         DMNContext dmnContext = dmnRuntime.newContext();
         assertNotNull(dmnContext);
         DMNModel dmnModel = this.createDMNModel(
-            "https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1", 
-            "Computed Hourly Pay Rate");
+            "https://kiegroup.org/dmn/_11A6EBAE-69F7-4695-BCC0-83B1A5FA5A44", 
+            "using DS");
 
         // hiring date reference date start = 05/14/2008
         HireDateReference hdr = new HireDateReference(LocalDate.of(2008, 5, 14), LocalDate.MAX, LocalDate.now());
@@ -134,11 +134,10 @@ public class RulesTest extends RulesBaseTest {
         List<LocalDate> holidays2020 = 
             holCal.holidays(LocalDate.of(2020, 1, 1), LocalDate.of(2021, 1, 1)).collect(Collectors.toList());
 
-        dmnContext.set("worked hours after 6 months", 1);
         dmnContext.set("employee", employee1);
         //dmnContext.set("worked day", LocalDateTime.of(2020, 7, 3, 8, 0));
         dmnContext.set("timesheet", ws1);
-        dmnContext.set("Holidays", holidays2020);
+        dmnContext.set("holidays", holidays2020);
 
         System.out.println("Requesting DMN Evaluation...");
         DMNResult dmnResult = dmnRuntime.evaluateAll(dmnModel, dmnContext); 

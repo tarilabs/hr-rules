@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='UTF-8'?>
 <dmn:definitions xmlns:dmn="http://www.omg.org/spec/DMN/20180521/MODEL/" xmlns="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="http://www.drools.org/kie/dmn/1.2" xmlns:feel="http://www.omg.org/spec/DMN/20180521/FEEL/" xmlns:dmndi="http://www.omg.org/spec/DMN/20180521/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" id="_A86B0064-A00A-43C6-89B8-7D80E38760F9" name="Computed Hourly Pay Rate" expressionLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" typeLanguage="http://www.omg.org/spec/DMN/20180521/FEEL/" namespace="https://kiegroup.org/dmn/_7D9C5D02-CF82-4284-8A62-89E5EA9011D1">
   <dmn:extensionElements/>
   <dmn:itemDefinition id="_792FAE61-738F-4D64-B9A8-E5AE0EB6B8BB" name="List of Days" isCollection="true">
@@ -28,14 +29,15 @@
       <dmn:typeRef>number</dmn:typeRef>
     </dmn:itemComponent>
     <dmn:itemComponent id="_9A61B8DA-72AC-4665-8CC2-44C0493C8CCD" name="worksheet" isCollection="true">
-      <dmn:itemComponent id="_877E39EF-0C15-472E-B4F8-8F0404E84BBD" name="workingHour" isCollection="false">
-        <dmn:itemComponent id="_6EC03FE8-1624-454D-B445-0527966561AB" name="hour" isCollection="false">
-          <dmn:typeRef>date and time</dmn:typeRef>
-        </dmn:itemComponent>
-        <dmn:itemComponent id="_2EB9D83A-487F-4F31-99E7-022D080D739F" name="runningTotalHours" isCollection="false">
-          <dmn:typeRef>number</dmn:typeRef>
-        </dmn:itemComponent>
-      </dmn:itemComponent>
+      <dmn:typeRef>tWorkingHour</dmn:typeRef>
+    </dmn:itemComponent>
+  </dmn:itemDefinition>
+  <dmn:itemDefinition id="_2B3B2DA8-B531-4017-8FAD-726D27FACC55" name="tWorkingHour" isCollection="false">
+    <dmn:itemComponent id="_02919F8A-0920-4488-B42F-AF156D11BC23" name="hour" isCollection="false">
+      <dmn:typeRef>date and time</dmn:typeRef>
+    </dmn:itemComponent>
+    <dmn:itemComponent id="_C7EE937E-0122-449F-8A71-E34D8EC1F55D" name="runningTotalHours" isCollection="false">
+      <dmn:typeRef>number</dmn:typeRef>
     </dmn:itemComponent>
   </dmn:itemDefinition>
   <dmn:decision id="_AC701F76-A39B-4ACF-901A-9CF8167E9265" name="computed hourly pay rate">
@@ -63,7 +65,7 @@
       <dmn:contextEntry>
         <dmn:variable id="_255AD7E4-4405-402E-AE44-9EC192254C7B" name="hired on or after May 14th of 2008" typeRef="boolean"/>
         <dmn:literalExpression id="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
-          <dmn:text>date(employee.hire date) &gt;= date("2008-05-14")</dmn:text>
+          <dmn:text>date(employee.hire date) >= date("2008-05-14")</dmn:text>
         </dmn:literalExpression>
       </dmn:contextEntry>
       <dmn:contextEntry>
@@ -88,7 +90,7 @@
               <dmn:text>worked hours after 6 months</dmn:text>
             </dmn:inputExpression>
           </dmn:input>
-          <dmn:output id="_E6552103-5301-44FB-8CE7-10C406058509" typeRef="UNDEFINED"/>
+          <dmn:output id="_E6552103-5301-44FB-8CE7-10C406058509"/>
           <dmn:annotation name=""/>
           <dmn:rule id="_1CEE7530-36B5-4573-943B-A752A2A5FDF9">
             <dmn:inputEntry id="_44991039-0CF8-4142-8EC2-6933C4FAFA96">
@@ -107,7 +109,7 @@
               <dmn:text>employee.hourly rate</dmn:text>
             </dmn:outputEntry>
             <dmn:annotationEntry>
-              <dmn:text/>
+              <dmn:text></dmn:text>
             </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_8D800C70-944B-41E4-9D94-4EFF5D8598FA">
@@ -127,7 +129,7 @@
               <dmn:text>employee.hourly rate</dmn:text>
             </dmn:outputEntry>
             <dmn:annotationEntry>
-              <dmn:text/>
+              <dmn:text></dmn:text>
             </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_8419E3D4-C69B-40E8-AEEF-7972543F5EAC">
@@ -147,7 +149,7 @@
               <dmn:text>employee.hourly rate</dmn:text>
             </dmn:outputEntry>
             <dmn:annotationEntry>
-              <dmn:text/>
+              <dmn:text></dmn:text>
             </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_BA38DFB9-0085-460C-A4B4-A35AE131E217">
@@ -167,7 +169,7 @@
               <dmn:text>employee.hourly rate + 1.25</dmn:text>
             </dmn:outputEntry>
             <dmn:annotationEntry>
-              <dmn:text/>
+              <dmn:text></dmn:text>
             </dmn:annotationEntry>
           </dmn:rule>
           <dmn:rule id="_5F57E3B4-356F-4DD6-A55A-FA07BE8234C3">
@@ -187,13 +189,23 @@
               <dmn:text>employee.hourly rate * 1.5</dmn:text>
             </dmn:outputEntry>
             <dmn:annotationEntry>
-              <dmn:text/>
+              <dmn:text></dmn:text>
             </dmn:annotationEntry>
           </dmn:rule>
         </dmn:decisionTable>
       </dmn:contextEntry>
     </dmn:context>
   </dmn:decision>
+  <dmn:decisionService id="_467FD84E-234B-43A1-B862-A18113120F3A" name="DS hourly pay">
+    <dmn:extensionElements/>
+    <dmn:variable id="_40CE546F-1D2C-4B32-A152-0415D5259D1F" name="DS hourly pay"/>
+    <dmn:outputDecision href="#_AC701F76-A39B-4ACF-901A-9CF8167E9265"/>
+    <dmn:encapsulatedDecision href="#_71C53EC6-EA5E-42C8-8C5D-C2A104DE6BCC"/>
+    <dmn:inputData href="#_C7C53291-E409-448E-8566-BEF336F516B2"/>
+    <dmn:inputData href="#_344306F6-C2E5-44AE-B2C0-BBF972680813"/>
+    <dmn:inputData href="#_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4"/>
+    <dmn:inputData href="#_198AA3F9-28FC-4577-8B54-BB235FB26A32"/>
+  </dmn:decisionService>
   <dmn:inputData id="_C7C53291-E409-448E-8566-BEF336F516B2" name="Holidays">
     <dmn:extensionElements/>
     <dmn:variable id="_685878C3-6C9D-4109-93D5-9AD19EE48A25" name="Holidays" typeRef="List of Days"/>
@@ -228,27 +240,27 @@
       <di:extension>
         <kie:ComponentsWidthsExtension>
           <kie:ComponentWidths dmnElementRef="_68697102-5695-4AB4-A596-EA1D1CA52EFC">
-            <kie:width>50</kie:width>
-            <kie:width>236</kie:width>
-            <kie:width>1510</kie:width>
+            <kie:width>50.0</kie:width>
+            <kie:width>236.0</kie:width>
+            <kie:width>1510.0</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_3D8C2A35-34A9-47CE-976F-219379BCD82E">
-            <kie:width>1510</kie:width>
+            <kie:width>1510.0</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
-            <kie:width>1510</kie:width>
+            <kie:width>1510.0</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_30E212DB-ABFE-4D8C-B4F4-2FC17B40A0DD">
-            <kie:width>50</kie:width>
-            <kie:width>235</kie:width>
-            <kie:width>168</kie:width>
-            <kie:width>178</kie:width>
-            <kie:width>203</kie:width>
-            <kie:width>234</kie:width>
-            <kie:width>422</kie:width>
+            <kie:width>50.0</kie:width>
+            <kie:width>235.0</kie:width>
+            <kie:width>168.0</kie:width>
+            <kie:width>178.0</kie:width>
+            <kie:width>203.0</kie:width>
+            <kie:width>234.0</kie:width>
+            <kie:width>422.0</kie:width>
           </kie:ComponentWidths>
           <kie:ComponentWidths dmnElementRef="_7BFC5ECE-7102-4B99-9DCB-A0B469ED6B4C">
-            <kie:width>300</kie:width>
+            <kie:width>300.0</kie:width>
           </kie:ComponentWidths>
         </kie:ComponentsWidthsExtension>
       </di:extension>
@@ -258,7 +270,7 @@
           <dmndi:StrokeColor red="0" green="0" blue="0"/>
           <dmndi:FontColor red="0" green="0" blue="0"/>
         </dmndi:DMNStyle>
-        <dc:Bounds x="308" y="65" width="140" height="52"/>
+        <dc:Bounds x="203" y="91" width="140" height="52"/>
         <dmndi:DMNLabel/>
       </dmndi:DMNShape>
       <dmndi:DMNShape id="dmnshape-_C7C53291-E409-448E-8566-BEF336F516B2" dmnElementRef="_C7C53291-E409-448E-8566-BEF336F516B2" isCollapsed="false">
@@ -276,7 +288,7 @@
           <dmndi:StrokeColor red="0" green="0" blue="0"/>
           <dmndi:FontColor red="0" green="0" blue="0"/>
         </dmndi:DMNStyle>
-        <dc:Bounds x="606" y="205" width="100" height="50"/>
+        <dc:Bounds x="501" y="173" width="100" height="50"/>
         <dmndi:DMNLabel/>
       </dmndi:DMNShape>
       <dmndi:DMNShape id="dmnshape-_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4" dmnElementRef="_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4" isCollapsed="false">
@@ -306,29 +318,42 @@
         <dc:Bounds x="278" y="376" width="100" height="50"/>
         <dmndi:DMNLabel/>
       </dmndi:DMNShape>
+      <dmndi:DMNShape id="dmnshape-_467FD84E-234B-43A1-B862-A18113120F3A" dmnElementRef="_467FD84E-234B-43A1-B862-A18113120F3A" isCollapsed="false">
+        <dmndi:DMNStyle>
+          <dmndi:FillColor red="255" green="255" blue="255"/>
+          <dmndi:StrokeColor red="0" green="0" blue="0"/>
+          <dmndi:FontColor red="0" green="0" blue="0"/>
+        </dmndi:DMNStyle>
+        <dc:Bounds x="179" y="51" width="521" height="193"/>
+        <dmndi:DMNLabel/>
+        <dmndi:DMNDecisionServiceDividerLine>
+          <di:waypoint x="179" y="151"/>
+          <di:waypoint x="700" y="151"/>
+        </dmndi:DMNDecisionServiceDividerLine>
+      </dmndi:DMNShape>
       <dmndi:DMNEdge id="dmnedge-_9831C6E0-EA8E-414A-ACCA-4F12D282DAF8" dmnElementRef="_9831C6E0-EA8E-414A-ACCA-4F12D282DAF8">
-        <di:waypoint x="656" y="230"/>
-        <di:waypoint x="378" y="117"/>
+        <di:waypoint x="551" y="198"/>
+        <di:waypoint x="273" y="143"/>
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="dmnedge-_03B9B0E8-A690-46DB-AA0A-55F2370DF291" dmnElementRef="_03B9B0E8-A690-46DB-AA0A-55F2370DF291">
         <di:waypoint x="522" y="401"/>
-        <di:waypoint x="378" y="117"/>
+        <di:waypoint x="273" y="143"/>
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="dmnedge-_03139610-65D7-45ED-A412-018333AAC21A" dmnElementRef="_03139610-65D7-45ED-A412-018333AAC21A">
         <di:waypoint x="328" y="401"/>
-        <di:waypoint x="378" y="117"/>
+        <di:waypoint x="273" y="143"/>
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="dmnedge-_2559904C-D904-4279-B27B-DE4089DB9C03" dmnElementRef="_2559904C-D904-4279-B27B-DE4089DB9C03">
         <di:waypoint x="152" y="399.5"/>
-        <di:waypoint x="378" y="117"/>
+        <di:waypoint x="273" y="143"/>
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="dmnedge-_3157D43A-D670-4EA6-9178-88819C81A2EB" dmnElementRef="_3157D43A-D670-4EA6-9178-88819C81A2EB">
         <di:waypoint x="522" y="401"/>
-        <di:waypoint x="656" y="255"/>
+        <di:waypoint x="551" y="223"/>
       </dmndi:DMNEdge>
       <dmndi:DMNEdge id="dmnedge-_543E01F6-C893-4D48-AF72-4B90D1888FE3" dmnElementRef="_543E01F6-C893-4D48-AF72-4B90D1888FE3">
         <di:waypoint x="773" y="399"/>
-        <di:waypoint x="656" y="255"/>
+        <di:waypoint x="551" y="223"/>
       </dmndi:DMNEdge>
     </dmndi:DMNDiagram>
   </dmndi:DMNDI>
