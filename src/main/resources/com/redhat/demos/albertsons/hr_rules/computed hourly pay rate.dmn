@@ -46,7 +46,7 @@
       <dmn:contextEntry>
         <dmn:variable id="_255AD7E4-4405-402E-AE44-9EC192254C7B" name="hired on or after May 14th of 2008" typeRef="boolean"/>
         <dmn:literalExpression id="_1FE17BCD-D52F-4F04-8DFB-3C357B8F63C3">
-          <dmn:text>employee.hire date >= date("2008-05-14T00:00:00")</dmn:text>
+          <dmn:text>employee.hire date >= date("2008-05-14")</dmn:text>
         </dmn:literalExpression>
       </dmn:contextEntry>
       <dmn:contextEntry>
