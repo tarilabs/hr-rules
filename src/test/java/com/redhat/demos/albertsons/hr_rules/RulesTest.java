@@ -111,7 +111,7 @@ public class RulesTest extends RulesBaseTest {
         Map<String, Object> employeeMap = new HashMap<>();
         employeeMap.put("id", employee1.getId());
         employeeMap.put("name", employee1.getName());
-        employeeMap.put("hire date", employee1.getHireDate());
+        employeeMap.put("hire date", employee1.getHireDate().toLocalDate());
         employeeMap.put("base salary", employee1.getBaseSalary());
         employeeMap.put("hourly rate", employee1.getRegularHourPayRate());
 
@@ -142,7 +142,7 @@ public class RulesTest extends RulesBaseTest {
             holCal.holidays(LocalDate.of(2020, 1, 1), LocalDate.of(2021, 1, 1)).collect(Collectors.toList());
 
         dmnContext.set("worked hours after 6 months", 1);
-        dmnContext.set("employee", employee1);
+        dmnContext.set("employee", employeeMap);
         dmnContext.set("worked day", LocalDate.of(2020, 7, 3));
         dmnContext.set("Holidays", holidays2020);
         // dmnContext.set("worksheet", ws1);
