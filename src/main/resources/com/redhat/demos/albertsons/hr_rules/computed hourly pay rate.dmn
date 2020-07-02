@@ -196,7 +196,7 @@
   </dmn:decision>
   <dmn:inputData id="_E252933C-3C2B-42A2-91A3-2DBE62F2FAE4" name="worked day">
     <dmn:extensionElements/>
-    <dmn:variable id="_33478180-B021-4DCD-A538-EAF5BB5DE233" name="worked day" typeRef="date"/>
+    <dmn:variable id="_33478180-B021-4DCD-A538-EAF5BB5DE233" name="worked day" typeRef="date and time"/>
   </dmn:inputData>
   <dmn:inputData id="_198AA3F9-28FC-4577-8B54-BB235FB26A32" name="worked hours after 6 months">
     <dmn:extensionElements/>
